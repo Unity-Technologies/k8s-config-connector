@@ -57,7 +57,7 @@ index 441a99237..0094511d2 100644
  	return []*schema.ResourceData{d}, nil
  }
  
-@@ -1156,14 +1137,23 @@ func nodePoolUpdate(d *schema.ResourceData, meta interface{}, nodePoolInfo *Node
+@@ -1146,14 +1146,25 @@ func nodePoolUpdate(d *schema.ResourceData, meta interface{}, nodePoolInfo *Node
  		}
  		if v, ok := d.GetOk(prefix + "autoscaling"); ok {
  			autoscaling := v.([]interface{})[0].(map[string]interface{})
@@ -72,7 +72,9 @@ index 441a99237..0094511d2 100644
 +			// disable autoscaling if both min/max node counts are set to 0
 +			minNodeCount := autoscaling["min_node_count"].(int)
 +			maxNodeCount := autoscaling["max_node_count"].(int)
-+			if (minNodeCount == 0) && (maxNodeCount == 0) {
++			minTotalNodeCount := autoscaling["total_min_node_count"].(int)
++			maxTotalNodeCount := autoscaling["total_max_node_count"].(int)
++			if (minNodeCount == 0) && (maxNodeCount == 0) && (minTotalNodeCount == 0) && (maxTotalNodeCount == 0) {
 +				update.DesiredNodePoolAutoscaling = &container.NodePoolAutoscaling{
 +					Enabled: false,
 +				}
